@@ -55,8 +55,8 @@ bool is_grounded() {
     // have to check both blocks
     // problem here
     // it says im grounded when im between 2 block, idm if i destroyed them or no....
-    if (blocks[0][std::floor(sprite_pos_y / 64)].getPosition().y == -1 &&
-        blocks[0][std::ceil(sprite_pos_y / 64)].getPosition().y == -1) {
+    if (blocks[0][std::floor(sprite_pos_x / 64)].getPosition().y == -1 &&
+        blocks[0][std::ceil(sprite_pos_x / 64)].getPosition().y == -1) {
       return false;
     } else {
       return true;
