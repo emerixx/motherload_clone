@@ -1,10 +1,13 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 #include <vector>
 
 double sprite_pos_x, sprite_pos_y = 0;
@@ -19,9 +22,12 @@ int g = 5;
 bool grounded = 0;
 
 // Create the main window
-sf::RenderWindow window(sf::VideoMode({1920, 1080}), "sfml_win");
+sf::RenderWindow window(sf::VideoMode({1600, 1080}), "sfml_win");
 float deltaTime;
-// Load a sprite to display
+
+sf::Font font("yudit.ttf");
+sf::Text txt(font, "test :3");
+
 const sf::Texture texture_main_sprite("sprite.jpg");
 const sf::Texture texture_bg("bg.png");
 const sf::Texture texture_dirt("textures/png/dirt.png");
@@ -35,6 +41,8 @@ bool is_grounded() {
   }
   // check if theres a block at x: pos_x-32
   double i = std::round(sprite_pos_x / 64);
+  int j = std::round((ground_y-64-sprite_pos_y)/64);
+  //get j by if ground_y-64-pos_y
   if (std::abs(i - sprite_pos_x / 64) < 0.1) {
     // means the sprite is mostly on one block;
     if (blocks[0][i].getPosition().y == -1) {
@@ -45,11 +53,12 @@ bool is_grounded() {
     }
   } else {
     // have to check both blocks
+    // problem here
+    // it says im grounded when im between 2 block, idm if i destroyed them or no....
     if (blocks[0][std::floor(sprite_pos_y / 64)].getPosition().y == -1 &&
         blocks[0][std::ceil(sprite_pos_y / 64)].getPosition().y == -1) {
       return false;
     } else {
-      //problem here probably
       return true;
     }
   }
@@ -71,6 +80,7 @@ int main() {
   while (window.isOpen()) {
     // Process events
     grounded = is_grounded();
+    txt.setString("Grounded:" + std::to_string(grounded));
     deltaTime = clock.restart().asSeconds();
     while (const std::optional event = window.pollEvent()) {
       // Close window: exit
@@ -135,6 +145,7 @@ int main() {
       }
     }
     window.draw(sprite);
+    window.draw(txt);
     sprite.setPosition(
         {static_cast<float>(sprite_pos_x), static_cast<float>(sprite_pos_y)});
     // Update the window

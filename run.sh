@@ -1,1 +1,1 @@
-make && ./app
+make && ./app.out
